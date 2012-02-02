@@ -10,7 +10,9 @@ Tree
 
 Results of ```python tree.py 918``` rendered in OpenSCAD:
 
-[<img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;">](https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png)
+<img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;" />
+
+[<img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;" />](https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png)
 
 The tree is based on an [L-system](http://en.wikipedia.org/wiki/L-system) seeded with a random number, in this case, 918.
 
