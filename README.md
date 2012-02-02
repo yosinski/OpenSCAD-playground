@@ -10,7 +10,11 @@ Tree
 
 Results of ```python tree.py 918``` rendered in OpenSCAD:
 
-<div style="float: right"><img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;border:10px solid;" /></div>
+<div style="float: right">
+
+<img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;border:10px solid;" />
+
+</div>
 
 [<img src="https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png" alt="tree" style="max-width:500px;" />](https://github.com/yosinski/OpenSCAD-playground/raw/master/generated/tree_918.png)
 
