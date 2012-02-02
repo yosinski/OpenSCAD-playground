@@ -1,7 +1,7 @@
 What's all this then?
 =======================
 
-These are just a few things I've made with [OpenSCAD](http://www.openscad.org/) and [SolidPython](https://github.com/SolidCode/SolidPython). So far:  just this tree.
+These are just a few things I've made with [OpenSCAD](http://www.openscad.org/) and [SolidPython](https://github.com/SolidCode/SolidPython).
 
 
 
