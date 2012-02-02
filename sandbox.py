@@ -1,5 +1,20 @@
 #! /usr/bin/python
 
+# Copyright 2012 by Jason Yosinski
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os, sys
 from numpy import random
 
@@ -8,13 +23,19 @@ from sp_utils import *
 
 from util import *
 
+
+
 def cyl():
     ret = cylinder(10, 20)
     ret.add_param('$fn', 24)
     return ret
 
+
+
 def box():
     return cube(10)
+
+
 
 def thing():
     return minkowski()(
@@ -22,12 +43,15 @@ def thing():
         cyl(),
         )
 
+
+
 def randboxes():
     nodes = []
     for ii in range(10):
         nodes.append(translate([random.uniform(-100, 100), random.uniform(-100, 100), 0])(box()))
     ret = union()(nodes)
     return ret
+
 
 
 def branch(nn = 3, sc = .7, rx = 15):
