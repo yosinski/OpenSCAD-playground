@@ -47,18 +47,30 @@ def branch(nn = 3, sc = .7, rx = 15):
         sc = rn(.6, .8)
         nodes = []
         nodes.append(cylinder(r = stemr, h = stemh))
+        branchPos = [ru(.4, 1) for ii in range(NN)]
+        maxBP = max(branchPos)
+        #print 'maxBP is', maxBP
+        branchPos = [branchPos[ii] / maxBP for ii in range(NN)]
         for ii in range(NN):
             rx = rn(35, 55)
             nodes.append(
-                translate([0, 0, stemh * ru(.4, 1)])(scale(sc)(rotate(a = [rx, 0, ii * (360./NN)])(branch(nn - 1, sc, rx)))),
+                translate([0, 0, branchPos[ii] * stemh * .9])(scale(sc)(rotate(a = [rx, 0, ii * (360./NN)])(branch(nn - 1, sc, rx)))),
                 )
         return union()(nodes)
 
 
 
 def treeWithBase():
+    base = cylinder(r = 6, h = .75)
+    base.add_param('$fn', 40)
+    trunk1 = cylinder(r1 = 3.5, r2 = 0, h = 2)
+    trunk1.add_param('$fn', 5)
+    trunk2 = cylinder(r1 = 2, r2 = 0, h = 4)
+    trunk2.add_param('$fn', 5)
     return union()(
-        cylinder(r = 6, h = .5),    # base
+        base,
+        trunk1,
+        trunk2,
         branch(5),                  # tree
         )
 
