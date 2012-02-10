@@ -28,6 +28,7 @@ openscad_builtins = [
     {'name': 'union',           'args': [],         'kwargs': []} ,
     {'name': 'intersection',    'args': [],         'kwargs': []} ,
     {'name': 'difference',      'args': [],         'kwargs': []} ,
+    {'name': 'hull',            'args': [],         'kwargs': []} ,
     
     # Transforms
     {'name': 'translate',       'args': [],         'kwargs': ['v']} ,

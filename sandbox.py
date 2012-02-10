@@ -95,12 +95,88 @@ def assemble():
 
 
 
+def ht1():
+    nodes = []
+    NN = 24
+    rr = 10
+    for ii in [3, 9, 15, 21]:
+        jj = ii - .5
+        nodes.append(
+            hull()(
+            rotate(a = [jj * (360./NN), 0, 0])(translate([0, rr, 0])(cylinder(r = rr, h = .1))),
+            rotate(a = [(jj+1) * (360./NN), 0, 0])(translate([0, rr, 0])(cylinder(r = rr, h = .1)))
+            )
+            )
+    donut = rotate(a = [0, 90, 0])(union()(nodes))
+    heart = union()(
+        donut,
+        translate([0, 0, -20-rr/sqrt(2)])(cylinder(r1 = 0, r2 = rr*(2+sqrt(2))/2, h = 20)),
+        
+        translate([30, 0, 0])(cylinder(r = 5, h = 10)),
+        )
+    return difference()(
+        heart,
+        translate([0, 25, -8])(rotate([90, 0, 0])(cylinder(r = 8, h = 50))),
+        )
+
+
+
+def ht2_segment(base, rr, frac):
+    '''frac is between 0 and 1'''
+    straightCir = 1 + sqrt(2)
+    circleCir = 5*pi/4
+    straightRatio = straightCir / (straightCir + circleCir)
+
+    if frac < straightRatio:
+        localFrac = frac / straightRatio
+        #rotate([0, 0, ii*deg/NN])    (translate([sqrt(2)* ii   *rr/NN, 0, sqrt(2)* ii   *rr/NN])(base)),
+        ret = translate([rr*(1+sqrt(2)/2)*localFrac, 0, rr*(1+sqrt(2)/2)*localFrac])(base)
+    else:
+        localFrac = (frac - straightRatio) / (1 - straightRatio)
+        ret = base
+        ret = translate([rr, 0, 0])(ret)
+        ret = rotate([0, -localFrac*215+45, 0])(ret)
+        ret = translate([rr, 0, (1+sqrt(2))*rr])(ret)
+    
+    return ret
+
+
+
+
+def ht2_edge(rr, deg):
+    deg = float(deg)
+    nodes = []
+    base = cylinder(r = .1, h = .01)
+    NN = 24
+    NN = 5
+    for ii in range(NN):
+        nodes.append(
+            hull()(
+            ht2_segment(base, rr, float(ii)/NN),
+            ht2_segment(base, rr, float(ii+1)/NN),
+            )
+            )
+    return minkowski()(
+        sphere(r=.5),
+        union()(nodes),
+        )
+
+
+
+def ht2():
+    rr = 10.
+    NN = 1
+    nodes = [rotate([0, 0, ii*360./NN])(ht2_edge(rr, -180+360.*ii/NN)) for ii in range(NN)]
+    return union()(nodes, translate([30, 0, 0])(cylinder(r = 5, h = 10)))
+
+
+
 def main():
     seed = ri(0, 1000)
-    seed = 918   # nice round
-    print 'seed is', seed
+    #seed = 918   # nice round
+    #print 'seed is', seed
     random.seed(seed)
-    aa = assemble()
+    aa = ht2()
     
     file_out = os.path.join(os.getenv('HOME'), 'Desktop', 'jason.scad')
     scad_render_to_file(aa, file_out)
