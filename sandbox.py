@@ -130,7 +130,9 @@ def ht2_segment(base, rr, frac):
     if frac < straightRatio:
         localFrac = frac / straightRatio
         #rotate([0, 0, ii*deg/NN])    (translate([sqrt(2)* ii   *rr/NN, 0, sqrt(2)* ii   *rr/NN])(base)),
-        ret = translate([rr*(1+sqrt(2)/2)*localFrac, 0, rr*(1+sqrt(2)/2)*localFrac])(base)
+        ret = base
+        ret = rotate([0, 45, 0])(ret)
+        ret = translate([rr*(1+sqrt(2)/2)*localFrac, 0, rr*(1+sqrt(2)/2)*localFrac])(ret)
     else:
         localFrac = (frac - straightRatio) / (1 - straightRatio)
         ret = base
@@ -146,16 +148,25 @@ def ht2_segment(base, rr, frac):
 def ht2_edge(rr, deg):
     deg = float(deg)
     nodes = []
-    base = cylinder(r = .1, h = .01)
-    NN = 24
-    NN = 5
+    base = cylinder(r = 1, h = .01)
+    NN = 24*2
+    rot0 = 0
+    rotd = 5
+    rot = 0
     for ii in range(NN):
+        rot1 = rot0 + random.uniform(-5, 10)
         nodes.append(
             hull()(
-            ht2_segment(base, rr, float(ii)/NN),
-            ht2_segment(base, rr, float(ii+1)/NN),
+            #rotate([0, 0, 180*ii/NN])(ht2_segment(base, rr, float(ii)/NN)),
+            #rotate([0, 0, 180*(ii+1)/NN])(ht2_segment(base, rr, float(ii+1)/NN)),
+            rotate([0, 0, rot])(ht2_segment(base, rr, float(ii)/NN)),
+            rotate([0, 0, rot+rotd])(ht2_segment(base, rr, float(ii+1)/NN)),
             )
             )
+        rot += rotd
+        rotd += random.uniform(-5, 5)
+        rot0 = rot1
+    return union()(nodes)
     return minkowski()(
         sphere(r=.5),
         union()(nodes),
@@ -165,7 +176,7 @@ def ht2_edge(rr, deg):
 
 def ht2():
     rr = 10.
-    NN = 1
+    NN = 10
     nodes = [rotate([0, 0, ii*360./NN])(ht2_edge(rr, -180+360.*ii/NN)) for ii in range(NN)]
     return union()(nodes, translate([30, 0, 0])(cylinder(r = 5, h = 10)))
 
