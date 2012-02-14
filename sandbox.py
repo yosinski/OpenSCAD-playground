@@ -16,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, sys
-from numpy import random
+from numpy import array, random, cross
+from numpy.linalg import norm
 
 from pyopenscad import *
 from sp_utils import *
-
 from util import *
 
 
@@ -149,7 +149,7 @@ def ht2_edge(rr, deg):
     deg = float(deg)
     nodes = []
     base = cylinder(r = 1, h = .01)
-    NN = 24*2
+    NN = 24/4
     rot0 = 0
     rotd = 5
     rot = 0
@@ -157,10 +157,10 @@ def ht2_edge(rr, deg):
         rot1 = rot0 + random.uniform(-5, 10)
         nodes.append(
             hull()(
-            #rotate([0, 0, 180*ii/NN])(ht2_segment(base, rr, float(ii)/NN)),
-            #rotate([0, 0, 180*(ii+1)/NN])(ht2_segment(base, rr, float(ii+1)/NN)),
-            rotate([0, 0, rot])(ht2_segment(base, rr, float(ii)/NN)),
-            rotate([0, 0, rot+rotd])(ht2_segment(base, rr, float(ii+1)/NN)),
+            rotate([0, 0, deg*ii/NN])(ht2_segment(base, rr, float(ii)/NN)),
+            rotate([0, 0, deg*(ii+1)/NN])(ht2_segment(base, rr, float(ii+1)/NN)),
+            #rotate([0, 0, rot])(ht2_segment(base, rr, float(ii)/NN)),
+            #rotate([0, 0, rot+rotd])(ht2_segment(base, rr, float(ii+1)/NN)),
             )
             )
         rot += rotd
@@ -174,11 +174,95 @@ def ht2_edge(rr, deg):
 
 
 
+def htInside():
+    # create flat half
+    rr = 10.
+    thick = 1.
+    top = translate([rr, thick/2, (1+sqrt(2))*rr])(rotate([90, 0, 0])(cylinder(r = rr, h = thick)))
+    junk, box = split(translate([0, -thick/2, 0])(rotate([0, -45, 0])(cube([(1+sqrt(2))*rr, thick, (1+sqrt(2)/2)*rr]))),
+                      [1, 0, 0], [0, 0, 0])
+    half = union()(top, box)
+
+    # subtract areas
+    hole = cylinder(r = 3, h = thick*2)
+    hole.add_param('$fn', 24)
+    half = difference()(half,
+                        translate([0, thick, 19])(rotate([90, 0, 0])(hole)))
+
+    # wind
+    rw = 4
+    wid1 = .7
+    wid2 = 1 - (1-wid1)/2
+    outer = cylinder(r = rw, h = thick*2)
+    outer.add_param('$fn', 24)
+    inner = cylinder(r = rw * wid1, h = thick*3)
+    inner.add_param('$fn', 24)
+    ring = difference()(outer, translate([0, 0, -thick/2])(inner))
+
+    temp, windTop = split(ring, [0, 1, 0], [0, 0, 0])
+    windTop2, junk = split(temp, [1, -1, 0], [0, 0, 0])
+    junk, windMid = split(temp, [sqrt(3), 1, 0], [0, 0, 0])
+    windBot = translate([rw*wid2, -sqrt(3)*rw*wid2, 0])(rotate([0, 0, 180])(windMid))
+    wind = union()(windTop, windTop2, windMid, windBot)
+    wind = translate([10, thick, 19])(rotate([90, 90, 0])(wind))
+    
+    ret = difference()(half, wind)
+
+    ret = union()(ret, rotate([0, 0, 180])(ret))
+    return ret
+
+
+
 def ht2():
     rr = 10.
-    NN = 10
-    nodes = [rotate([0, 0, ii*360./NN])(ht2_edge(rr, -180+360.*ii/NN)) for ii in range(NN)]
-    return union()(nodes, translate([30, 0, 0])(cylinder(r = 5, h = 10)))
+    NN = 7
+    shell = []
+    # different slopes
+    #shell.extend([rotate([0, 0, ii*360./NN])(ht2_edge(rr, -180+360.*ii/NN)) for ii in range(NN)])
+    # constant slope
+    shell.extend([rotate([0, 0, ii*360./NN])(ht2_edge(rr, 200)) for ii in range(NN)])
+    shell.extend([rotate([0, 0, ii*360./NN])(ht2_edge(rr, -100)) for ii in range(NN)])
+
+    inside = htInside()
+    
+    return union()(
+        #shell,
+        inside,
+        translate([30, 0, 0])(cylinder(r = 5, h = 10)),
+        )
+
+
+
+def split(shape, normal, offset):
+    #one = shape
+    #two = intersection()(shape, cube(50))
+
+    sep = translate([0, -25, -25])(cube(50))
+    normal = array(normal, dtype=float)
+    normal /= norm(normal)
+    vecA = cross(normal, [1.23, 2.34, 2.54])
+    vecA /= norm(vecA)
+    vecB = cross(normal, vecA)
+    vecB /= norm(vecB)
+    mm = [[normal[0], vecA[0], vecB[0], offset[0]],
+          [normal[1], vecA[1], vecB[1], offset[1]],
+          [normal[2], vecA[2], vecB[2], offset[2]],
+          [0, 0, 0, 1]]
+    sep = multmatrix(m = mm)(sep)
+    return difference()(shape, sep), intersection()(shape, sep)
+
+
+
+def trySplit():
+    shape = cylinder(r = 10, h = 2)
+    one, two = split(shape, [1, 1, 10], [4, 4, 0])
+    two, three = split(two, [1, 0, 0], [0, 0, 0])
+    return union()(
+        one,
+        translate([0, 0, 2])(two),
+        translate([0, 0, 4])(three),
+        translate([30, 0, 0])(cylinder(r = 5, h = 10)),
+        )
 
 
 
@@ -188,6 +272,7 @@ def main():
     #print 'seed is', seed
     random.seed(seed)
     aa = ht2()
+    #aa = trySplit()
     
     file_out = os.path.join(os.getenv('HOME'), 'Desktop', 'jason.scad')
     scad_render_to_file(aa, file_out)

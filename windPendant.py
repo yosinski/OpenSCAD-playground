@@ -51,7 +51,7 @@ def heart_edge(rr, deg):
     deg = float(deg)
     nodes = []
     base = cylinder(r = 1, h = .01)
-    NN = 24/4
+    NN = 24*2
     rot0 = 0
     rotd = 5
     rot = 0
@@ -175,15 +175,18 @@ def pendant():
 
     inside = heartInside()
 
-    handle = difference()(
-        cylinder(r = 2, h = 20),
-        translate([0, 0, 18])(rotate([90, 0, 0])(cylinder(r = 1, h = 5))),
-        )
+    h1 = cylinder(r = 2, h = 40).add_param('$fn', 48)
+    h2 = translate([0, 5, 38])(rotate([90, 0, 0])(cylinder(r = 1, h = 10))).add_param('$fn', 24)
+    handle = translate([0, 0, 28.5])(h1 - h2)
+
+    tip = translate([0, 0, -1.4])(cylinder(r1=0, r2=1, h=1).add_param('$fn', 24))
     
     return union()(
-        #shell,
+        handle,
+        shell,
         inside,
-        translate([30, 0, 0])(cylinder(r = 5, h = 10)),
+        tip,
+        #translate([30, 0, 0])(cylinder(r = 5, h = 10)),
         )
 
 
