@@ -21,7 +21,7 @@ Try it yourself
 
 That's all you need to get started!
 
-Tweak the parameters in ```tree.py``` to make other L-system designs, or come up with something completely new.
+Tweak the parameters in ```tree.py``` to make other L-system designs, try out ```windPendant.py```, or come up with something completely new.
 
 
 
@@ -45,6 +45,27 @@ The file ```tree.py``` generates random arboreal specimens like the one below. T
 ### All cleaned up. Note that several of the fragile smaller branches broke during cleaning.
 
 [![tree_cleaned](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsTree918/tree_918_cleaned_500.jpg)](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsTree918/tree_918_cleaned.jpg)
+
+
+
+Wind Pendant
+=======================
+
+The file ```windPendant.py``` generates a top that, when spun, relies on [persistance of vision](http://en.wikipedia.org/wiki/Persistence_of_vision) to produce an image.
+
+### Results of ```python windPendant.py``` rendered in OpenSCAD
+
+[![windPendant1](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendant1_500.png)](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendant1.png)
+
+[![windPendant2](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendant2_500.png)](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendant2.png)
+
+### After 3D printing
+
+[![windPendantPrinted](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendantPrinted_500.jpg)](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendantPrinted.jpg)
+
+### Spinning
+
+[![windPendantSpinning](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendantSpinning_500.jpg)](https://github.com/yosinski/OpenSCAD-playground/raw/master/resultsWindPendant/windPendantSpinning.jpg)
 
 
 
