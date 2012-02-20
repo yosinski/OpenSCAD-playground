@@ -155,8 +155,8 @@ def heartInside():
     for ii in range(NLayers):
         layers.append(rotate([0, 0, 180])(layers[ii]))
 
-    #layers = [layers[ii] for ii in [6, 7, int(NLayers+6), int(NLayers+7)]]
-    #layers = [layers[ii] for ii in [5, 6, 7, 8]]
+    #layers = [layers[ii] for ii in [1, 5, 6, 7, NLayers+1, int(NLayers+6), int(NLayers+7)]]
+    #layers = [layers[ii] for ii in [5, 6, 7, 8, 9]]
 
     ret = union()(layers)
     return ret
@@ -179,16 +179,19 @@ def pendant():
     h2 = translate([0, 5, 38])(rotate([90, 0, 0])(cylinder(r = 1, h = 10))).add_param('$fn', 24)
     handle = translate([0, 0, 28.5])(h1 - h2)
 
+    support = (cylinder(r = 1, h = 16).add_param('$fn', 48) +
+               translate([0, 0, 22])(cylinder(r = 1, h = 4).add_param('$fn', 48)))
+
     tip = translate([0, 0, -1.4])(cylinder(r1=0, r2=1, h=1).add_param('$fn', 24))
     
     return union()(
         handle,
         shell,
         inside,
+        support,
         tip,
         #translate([30, 0, 0])(cylinder(r = 5, h = 10)),
         )
-
 
 
 

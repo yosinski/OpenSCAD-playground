@@ -23,7 +23,8 @@ def split(shape, normal, offset):
     #one = shape
     #two = intersection()(shape, cube(50))
 
-    sep = translate([0, -25, -25])(cube(50))
+    sep1 = translate([.01, -25, -25])(cube(50))    # to make closed shapes
+    sep2 = translate([0, -25, -25])(cube(50))
     normal = array(normal, dtype=float)
     normal /= norm(normal)
     vecA = cross(normal, [1.23, 2.34, 2.54])
@@ -34,5 +35,6 @@ def split(shape, normal, offset):
           [normal[1], vecA[1], vecB[1], offset[1]],
           [normal[2], vecA[2], vecB[2], offset[2]],
           [0, 0, 0, 1]]
-    sep = multmatrix(m = mm)(sep)
-    return difference()(shape, sep), intersection()(shape, sep)
+    sep1 = multmatrix(m = mm)(sep1)
+    sep2 = multmatrix(m = mm)(sep2)
+    return difference()(shape, sep1), intersection()(shape, sep2)
